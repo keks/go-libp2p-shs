@@ -2,6 +2,8 @@ package shs
 
 import (
 	"io"
+	"net"
+	"time"
 
 	b58 "github.com/jbenet/go-base58"
 
