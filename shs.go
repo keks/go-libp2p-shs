@@ -5,8 +5,8 @@ import (
 
 	ss "github.com/keks/go-libp2p-shs/thirdparty/secretstream"
 	shs "github.com/keks/go-libp2p-shs/thirdparty/secretstream/secrethandshake"
-	ma "github.com/multiformats/go-multiaddr"
-	manet "github.com/multiformats/go-multiaddr-net"
+	ma "github.com/jbenet/go-multiaddr"
+	manet "github.com/jbenet/go-multiaddr-net"
 )
 
 const (

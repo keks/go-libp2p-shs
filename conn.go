@@ -7,8 +7,8 @@ import (
 
 	b58 "github.com/jbenet/go-base58"
 
-	ma "github.com/multiformats/go-multiaddr"
-	manet "github.com/multiformats/go-multiaddr-net"
+	ma "github.com/jbenet/go-multiaddr"
+	manet "github.com/jbenet/go-multiaddr-net"
 )
 
 type Conn struct {
@@ -61,5 +61,10 @@ func (c Conn) SetWriteDeadline(t time.Time) error {
 func pubKeyToMA(pub []byte) ma.Multiaddr {
 	b58Str := b58.Encode(pub)
 
-	return ma.NewMultiaddr(ProtocolName + "/" + b58Str)
+	a, err := ma.NewMultiaddr(ProtocolName + "/" + b58Str)
+	if err != nil {
+		panic(err) // TODO find a better way but interface doesn't accept errors
+	}
+
+	return a
 }

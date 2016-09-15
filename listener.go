@@ -3,16 +3,17 @@ package shs
 import (
 	"net"
 
+	ma "github.com/jbenet/go-multiaddr"
+	manet "github.com/jbenet/go-multiaddr-net"
 	ss "github.com/keks/go-libp2p-shs/thirdparty/secretstream"
 	shs "github.com/keks/go-libp2p-shs/thirdparty/secretstream/secrethandshake"
-	ma "github.com/multiformats/go-multiaddr"
-	manet "github.com/multiformats/go-multiaddr-net"
 )
 
 // Listener implements the go-libp2p-transport.Listener interface
 type Listener struct {
-	l    manet.Listener
-	keys shs.EdKeyPair
+	l      manet.Listener
+	keys   shs.EdKeyPair
+	appKey []byte
 }
 
 func (l *Listener) Accept() (manet.Conn, error) {
@@ -21,7 +22,7 @@ func (l *Listener) Accept() (manet.Conn, error) {
 		return nil, err
 	}
 
-	secConn, err := ss.ServerOnce(c, l.keys)
+	secConn, err := ss.ServerOnce(c, l.keys, l.appKey)
 	return &Conn{secConn.(ss.Conn), c}, err
 }
 

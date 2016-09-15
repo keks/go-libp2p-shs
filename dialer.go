@@ -1,11 +1,13 @@
 package shs
 
 import (
+	"github.com/agl/ed25519"
 	b58 "github.com/jbenet/go-base58"
 
+	ma "github.com/jbenet/go-multiaddr"
+	manet "github.com/jbenet/go-multiaddr-net"
+	bs "github.com/keks/go-libp2p-shs/thirdparty/secretstream/boxstream"
 	shs "github.com/keks/go-libp2p-shs/thirdparty/secretstream/secrethandshake"
-	ma "github.com/multiformats/go-multiaddr"
-	manet "github.com/multiformats/go-multiaddr-net"
 )
 
 type Dialer struct {
@@ -22,7 +24,7 @@ func (d Dialer) Dial(raddr ma.Multiaddr) (*Conn, error) {
 	}
 
 	rPub := [ed25519.PublicKeySize]byte{}
-	copy(rPub[:], b58.Decode(rPub58))
+	copy(rPub[:], b58.Decode(rPubB58))
 
 	c, err := manet.Dial(tail)
 	if err != nil {
@@ -42,12 +44,12 @@ func (d Dialer) Dial(raddr ma.Multiaddr) (*Conn, error) {
 	deKey, deNonce := state.GetBoxstreamDecKeys()
 
 	boxStream := Conn{
-		Reader: bs.NewUnboxer(conn, &deNonce, &deKey),
-		Writer: bs.NewBoxer(conn, &enNonce, &enKey),
-		conn:   c,
-		local:  c.keys.Public[:],
-		remote: state.Remote(),
+		Reader:    bs.NewUnboxer(c, &deNonce, &deKey),
+		Writer:    bs.NewBoxer(c, &enNonce, &enKey),
+		lowerConn: c,
+		local:     d.keys.Public[:],
+		remote:    state.Remote(),
 	}
 
-	return boxStream, nil
+	return &boxStream, nil
 }
