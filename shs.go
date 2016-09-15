@@ -11,16 +11,12 @@ import (
 )
 
 const (
-	P_SHS        = 303
+	ProtocolId   = 350
 	ProtocolName = "shs"
 )
 
 var ErrTCPOnly = errors.New("shs only supports tcp") // TODO get rid of this
 var ErrWrongBindKey = errors.New("public key in bind address doesn't match own key")
-
-func init() {
-	ma.AddProtocol(ma.Protocol{P_SHS, ma.LengthPrefixedVarSize, "shs", ma.CodeToVarint(P_SHS)})
-}
 
 // Transport implements the go-libp2p-transport.Transport interface
 type Transport struct {
@@ -41,7 +37,7 @@ func (t *Transport) Listen(laddr ma.Multiaddr) (*Listener, error) {
 	head, tail := maHead(laddr)
 
 	// get base58 pubkey from ma
-	bindPubKey58, err := head.ValueForProtocol(P_SHS)
+	bindPubKey58, err := head.ValueForProtocol(ProtocolId)
 	if err != nil {
 		return nil, err
 	}
