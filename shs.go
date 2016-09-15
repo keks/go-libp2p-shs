@@ -1,12 +1,13 @@
 package shs
 
 import (
+	"errors"
+
 	b58 "github.com/jbenet/go-base58"
 
-	ss "github.com/keks/go-libp2p-shs/thirdparty/secretstream"
-	shs "github.com/keks/go-libp2p-shs/thirdparty/secretstream/secrethandshake"
 	ma "github.com/jbenet/go-multiaddr"
 	manet "github.com/jbenet/go-multiaddr-net"
+	shs "github.com/keks/go-libp2p-shs/thirdparty/secretstream/secrethandshake"
 )
 
 const (
@@ -15,6 +16,7 @@ const (
 )
 
 var ErrTCPOnly = errors.New("shs only supports tcp") // TODO get rid of this
+var ErrWrongBindKey = errors.New("public key in bind address doesn't match own key")
 
 func init() {
 	ma.AddProtocol(ma.Protocol{P_SHS, ma.LengthPrefixedVarSize, "shs", ma.CodeToVarint(P_SHS)})
@@ -23,40 +25,34 @@ func init() {
 // Transport implements the go-libp2p-transport.Transport interface
 type Transport struct {
 	keys   shs.EdKeyPair
-	client ss.Client
+	appKey []byte
 }
 
 // NewTransport creates and initializes a struct of type *Transport
 func NewTransport(k shs.EdKeyPair, appKey []byte) *Transport {
-	return &Transport{
-		k,
-		ss.NewClient(k, appKey),
-	}
+	return &Transport{k, appKey}
 }
 
 func (t *Transport) Dialer(laddr ma.Multiaddr, opts ...interface{}) (Dialer, error) {
-	return Dialer(t.client), nil
+	return Dialer{t.keys, t.appKey}, nil
 }
 
 func (t *Transport) Listen(laddr ma.Multiaddr) (*Listener, error) {
 	head, tail := maHead(laddr)
 
 	// get base58 pubkey from ma
-	pubKey58, err := head.ValueForProtocol(P_SHS)
+	bindPubKey58, err := head.ValueForProtocol(P_SHS)
 	if err != nil {
 		return nil, err
 	}
 
-	// decode
-	pubKey, err := b58.Decode(pubKey58)
-	if err != nil {
-		return nil, err
+	// check if we bind to own pubkey
+	if b58.Encode(t.keys.Public[:]) != bindPubKey58 {
+		return nil, ErrWrongBindKey
 	}
-
-	// check if its correct key TODO
 
 	// for the moment, until I found a better way TODO
-	if _, err = tail.ValueForCode(ma.P_TCP); err != nil {
+	if _, err = tail.ValueForProtocol(ma.P_TCP); err != nil {
 		return nil, ErrTCPOnly
 	}
 
@@ -66,5 +62,5 @@ func (t *Transport) Listen(laddr ma.Multiaddr) (*Listener, error) {
 		return nil, err
 	}
 
-	return &Listener{l, t.keys}
+	return &Listener{l, t.keys, t.appKey}, nil
 }

@@ -3,9 +3,11 @@ package shs
 import (
 	"net"
 
+	b58 "github.com/jbenet/go-base58"
 	ma "github.com/jbenet/go-multiaddr"
 	manet "github.com/jbenet/go-multiaddr-net"
-	ss "github.com/keks/go-libp2p-shs/thirdparty/secretstream"
+
+	bs "github.com/keks/go-libp2p-shs/thirdparty/secretstream/boxstream"
 	shs "github.com/keks/go-libp2p-shs/thirdparty/secretstream/secrethandshake"
 )
 
@@ -22,8 +24,29 @@ func (l *Listener) Accept() (manet.Conn, error) {
 		return nil, err
 	}
 
-	secConn, err := ss.ServerOnce(c, l.keys, l.appKey)
-	return &Conn{secConn.(ss.Conn), c}, err
+	state, err := shs.NewServerState(l.appKey, l.keys)
+	if err != nil {
+		return nil, err
+	}
+
+	err = shs.Server(state, c)
+	if err != nil {
+		return nil, err
+	}
+
+	enKey, enNonce := state.GetBoxstreamEncKeys()
+	deKey, deNonce := state.GetBoxstreamDecKeys()
+
+	remote := state.Remote()
+	boxed := Conn{
+		Reader:    bs.NewUnboxer(c, &deNonce, &deKey),
+		Writer:    bs.NewBoxer(c, &enNonce, &enKey),
+		lowerConn: c,
+		local:     l.keys.Public[:],
+		remote:    remote[:],
+	}
+
+	return boxed, nil
 }
 
 func (l *Listener) Close() error {
@@ -36,7 +59,7 @@ func (l *Listener) Addr() net.Addr {
 }
 
 func (l *Listener) Multiaddr() ma.Multiaddr {
-	return ma.Join(l.l.Multiaddr, pubKeyToMA(l.keys.Public[:]))
+	return l.l.Multiaddr().Encapsulate(pubKeyToMA(l.keys.Public[:]))
 }
 
 type Addr struct {
@@ -60,7 +83,7 @@ func maHead(m ma.Multiaddr) (head, tail ma.Multiaddr) {
 	ms := ma.Split(m)
 
 	head = ms[len(ms)-1]
-	tail = ma.Join(ms[:len(ms)-1])
+	tail = ma.Join(ms[:len(ms)-1]...)
 
 	return
 }
