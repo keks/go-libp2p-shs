@@ -7,8 +7,8 @@ import (
 	ma "github.com/jbenet/go-multiaddr"
 	manet "github.com/jbenet/go-multiaddr-net"
 
-	bs "github.com/keks/go-libp2p-shs/thirdparty/secretstream/boxstream"
-	shs "github.com/keks/go-libp2p-shs/thirdparty/secretstream/secrethandshake"
+	bs "github.com/keks/secretstream/boxstream"
+	shs "github.com/keks/secretstream/secrethandshake"
 )
 
 // Listener implements the go-libp2p-transport.Listener interface

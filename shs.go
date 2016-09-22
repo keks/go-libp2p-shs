@@ -7,8 +7,7 @@ import (
 
 	ma "github.com/jbenet/go-multiaddr"
 	manet "github.com/jbenet/go-multiaddr-net"
-	shs "github.com/keks/go-libp2p-shs/thirdparty/secretstream/secrethandshake"
-)
+	shs "github.com/keks/secretstream/secrethandshake"
 
 const (
 	ProtocolId   = 350

@@ -6,7 +6,7 @@ import (
 
 	b58 "github.com/jbenet/go-base58"
 	ma "github.com/jbenet/go-multiaddr"
-	shs "github.com/keks/go-libp2p-shs/thirdparty/secretstream/secrethandshake"
+	shs "github.com/keks/secretstream/secrethandshake"
 )
 
 const (

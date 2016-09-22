@@ -2,13 +2,14 @@ package shs
 
 import (
 	"github.com/agl/ed25519"
+	bs "github.com/keks/secretstream/boxstream"
+	shs "github.com/keks/secretstream/secrethandshake"
+
 	b58 "github.com/jbenet/go-base58"
 
 	ma "github.com/jbenet/go-multiaddr"
 	manet "github.com/jbenet/go-multiaddr-net"
-	bs "github.com/keks/go-libp2p-shs/thirdparty/secretstream/boxstream"
 
-	shs "github.com/keks/go-libp2p-shs/thirdparty/secretstream/secrethandshake"
 )
 
 type Dialer struct {
