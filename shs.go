@@ -32,6 +32,7 @@ func (t *Transport) Dialer(laddr ma.Multiaddr, opts ...interface{}) (Dialer, err
 	return Dialer{t.keys, t.appKey}, nil
 }
 
+// Listen returns a *Listener for the specified laddr.
 func (t *Transport) Listen(laddr ma.Multiaddr) (*Listener, error) {
 	head, tail := maHead(laddr)
 

@@ -11,6 +11,7 @@ import (
 	manet "github.com/jbenet/go-multiaddr-net"
 )
 
+// Conn is an encrypted connection to a remote shs host.
 type Conn struct {
 	io.Reader
 	io.Writer
@@ -20,10 +21,12 @@ type Conn struct {
 	remote, local []byte
 }
 
+// LocalMultiaddr returns the local Multiaddr
 func (c Conn) LocalMultiaddr() ma.Multiaddr {
 	return ma.Join(c.lowerConn.LocalMultiaddr(), pubKeyToMA(c.local))
 }
 
+// LocalMultiaddr returns the remote end's Multiaddr
 func (c Conn) RemoteMultiaddr() ma.Multiaddr {
 	return ma.Join(c.lowerConn.RemoteMultiaddr(), pubKeyToMA(c.remote))
 }

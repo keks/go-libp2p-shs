@@ -12,11 +12,13 @@ import (
 
 )
 
+// Dialer allows dialing other shs hosts
 type Dialer struct {
 	keys   shs.EdKeyPair
 	appKey []byte
 }
 
+// Dial tries to connect to the shs host with the Multiaddress raddr.
 func (d Dialer) Dial(raddr ma.Multiaddr) (*Conn, error) {
 	head, tail := maHead(raddr)
 
