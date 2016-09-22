@@ -8,7 +8,9 @@ import (
 	shs "github.com/keks/secretstream/secrethandshake"
 	ma "github.com/multiformats/go-multiaddr"
 	manet "github.com/multiformats/go-multiaddr-net"
+	mafmt "github.com/whyrusleeping/mafmt"
 
+	transport "github.com/libp2p/go-libp2p-transport"
 )
 
 var proto = ma.ProtocolWithName("shs")
@@ -27,12 +29,18 @@ func NewTransport(k shs.EdKeyPair, appKey []byte) *Transport {
 	return &Transport{k, appKey}
 }
 
-func (t *Transport) Dialer(laddr ma.Multiaddr, opts ...interface{}) (Dialer, error) {
-	return Dialer{t.keys, t.appKey}, nil
+// Matches returns whether this Transport is capable of handling that Multiaddress
+func (t *Transport) Matches(a ma.Multiaddr) bool {
+	return mafmt.SHS.Matches(a)
+}
+
+// Dialer retuns a Dialer. laddr is ignored.
+func (t *Transport) Dialer(laddr ma.Multiaddr, opts ...transport.DialOpt) (transport.Dialer, error) {
+	return Dialer{t}, nil
 }
 
 // Listen returns a *Listener for the specified laddr.
-func (t *Transport) Listen(laddr ma.Multiaddr) (*Listener, error) {
+func (t *Transport) Listen(laddr ma.Multiaddr) (transport.Listener, error) {
 	head, tail := maHead(laddr)
 
 	// get base58 pubkey from ma
@@ -57,5 +65,5 @@ func (t *Transport) Listen(laddr ma.Multiaddr) (*Listener, error) {
 		return nil, err
 	}
 
-	return &Listener{l, t.keys, t.appKey}, nil
+	return &Listener{l, t}, nil
 }

@@ -6,7 +6,7 @@ import (
 	"time"
 
 	b58 "github.com/jbenet/go-base58"
-
+	transport "github.com/libp2p/go-libp2p-transport"
 	ma "github.com/multiformats/go-multiaddr"
 	manet "github.com/multiformats/go-multiaddr-net"
 )
@@ -18,12 +18,14 @@ type Conn struct {
 
 	lowerConn manet.Conn
 
-	remote, local []byte
+	remote []byte
+
+	t *Transport
 }
 
 // LocalMultiaddr returns the local Multiaddr
 func (c Conn) LocalMultiaddr() ma.Multiaddr {
-	return ma.Join(c.lowerConn.LocalMultiaddr(), pubKeyToMA(c.local))
+	return ma.Join(c.lowerConn.LocalMultiaddr(), pubKeyToMA(c.t.keys.Public[:]))
 }
 
 // LocalMultiaddr returns the remote end's Multiaddr
@@ -38,7 +40,7 @@ func (c Conn) Close() error {
 
 // LocalAddr returns the local net.Addr with the local public key
 func (c Conn) LocalAddr() net.Addr {
-	return Addr{c.lowerConn.LocalAddr(), c.local}
+	return Addr{c.lowerConn.LocalAddr(), c.t.keys.Public[:]}
 }
 
 // RemoteAddr returns the remote net.Addr with the remote public key
@@ -59,6 +61,10 @@ func (c Conn) SetReadDeadline(t time.Time) error {
 // SetWriteDeadline passes the call to the underlying net.Conn
 func (c Conn) SetWriteDeadline(t time.Time) error {
 	return c.lowerConn.SetWriteDeadline(t)
+}
+
+func (c Conn) Transport() transport.Transport {
+	return c.t
 }
 
 func pubKeyToMA(pub []byte) ma.Multiaddr {

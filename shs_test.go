@@ -6,6 +6,7 @@ import (
 
 	b58 "github.com/jbenet/go-base58"
 	shs "github.com/keks/secretstream/secrethandshake"
+	transport "github.com/libp2p/go-libp2p-transport"
 	ma "github.com/multiformats/go-multiaddr"
 )
 
@@ -27,7 +28,6 @@ func (r randReader) Read(buf []byte) (int, error) {
 }
 
 func init() {
-	ma.AddProtocol(ma.Protocol{ProtocolId, ma.LengthPrefixedVarSize, ProtocolName, ma.CodeToVarint(ProtocolId)})
 	rand.Read(appKey[:])
 
 	k1, _ = shs.GenEdKeyPair(randReader{})
@@ -40,15 +40,25 @@ func TestCreateTransport(t *testing.T) {
 }
 
 func TestConnect(t *testing.T) {
+	// test transport interfaces
+	var (
+		tConn      transport.Conn
+		tListener  transport.Listener
+		tTransport transport.Transport
+	)
+
 	t1 = NewTransport(*k1, appKey[:])
 	t2 = NewTransport(*k2, appKey[:])
+
+	tTransport = t1 // compile time type check
+	_ = tTransport
 
 	laddr, err := ma.NewMultiaddr("/ip4/127.0.0.1/tcp/1234/shs/" + b58.Encode(t1.keys.Public[:]))
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	daddr, err := ma.NewMultiaddr("/ip4/127.0.0.1/tcp/1235/shs/" + b58.Encode(t2.keys.Public[:]))
+	daddr, err := ma.NewMultiaddr("/ip4/127.0.0.1/shs/" + b58.Encode(t2.keys.Public[:]))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -58,11 +68,18 @@ func TestConnect(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	// compile time type checks
+	tListener = l
+	_ = tListener
+
 	go func() {
 		cs, err := l.Accept()
 		if err != nil {
 			t.Fatal(err)
 		}
+
+		// compile time type checks
+		tConn = cs
 
 		buf := make([]byte, 1024)
 		n, err := cs.Read(buf)

@@ -1,0 +1,47 @@
+{
+  "author": "keks",
+  "bugs": {
+    "url": "github.com/keks/go-libp2p-shs"
+  },
+  "gx": {
+    "dvcsimport": "github.com/keks/go-libp2p-shs"
+  },
+  "gxDependencies": [
+    {
+      "author": "whyrusleeping",
+      "hash": "QmdaaNFwuGbVKycnVnR4jXpRfvfpXHrfhGBDXKXCWJHW2S",
+      "name": "go-multiaddr",
+      "version": "1.2.0"
+    },
+    {
+      "author": "jbenet",
+      "hash": "QmcAvQPCLH6zuSLFqHdGCANf5exdu2rzhPUNnHRbGUtBPG",
+      "name": "go-multiaddr-net",
+      "version": "1.5.0"
+    },
+    {
+      "author": "whyrusleeping",
+      "hash": "QmTAqd9YKHtCbKmi19qXoi6xfJc9JWaszkqvHk9iZ78UYY",
+      "name": "mafmt",
+      "version": "1.2.0"
+    },
+    {
+      "author": "whyrusleeping",
+      "hash": "QmT8rehPR3F6bmwL6zjUN8XpiDBFFpMP2myPdC6ApsWfJf",
+      "name": "go-base58",
+      "version": "0.0.0"
+    },
+    {
+      "author": "whyrusleeping",
+      "hash": "QmW3HcZ8gDr2JyK7fZnXLqjRJ4iu4LFmsYGZJyqQZx7UPp",
+      "name": "go-libp2p-transport",
+      "version": "1.6.1"
+    }
+  ],
+  "gxVersion": "0.7.0",
+  "language": "go",
+  "license": "",
+  "name": "go-libp2p-shs",
+  "version": "0.0.0"
+}
+
