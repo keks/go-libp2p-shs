@@ -64,7 +64,7 @@ func (c Conn) SetWriteDeadline(t time.Time) error {
 func pubKeyToMA(pub []byte) ma.Multiaddr {
 	b58Str := b58.Encode(pub)
 
-	a, err := ma.NewMultiaddr(ProtocolName + "/" + b58Str)
+	a, err := ma.NewMultiaddr(proto.Name + "/" + b58Str)
 	if err != nil {
 		panic(err) // TODO find a better way but interface doesn't accept errors
 	}

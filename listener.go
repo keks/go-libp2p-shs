@@ -74,7 +74,7 @@ type Addr struct {
 
 // Network returns the network we are on. Most likely "tcp/shs".
 func (a Addr) Network() string {
-	return a.lower.Network() + "/" + ProtocolName
+	return a.lower.Network() + "/" + proto.Name
 }
 
 // PubKey returns the public key of the node at this address

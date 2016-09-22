@@ -22,7 +22,7 @@ type Dialer struct {
 func (d Dialer) Dial(raddr ma.Multiaddr) (*Conn, error) {
 	head, tail := maHead(raddr)
 
-	rPubB58, err := head.ValueForProtocol(ProtocolId)
+	rPubB58, err := head.ValueForProtocol(proto.Code)
 	if err != nil {
 		return nil, err
 	}

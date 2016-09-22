@@ -9,10 +9,9 @@ import (
 	ma "github.com/multiformats/go-multiaddr"
 	manet "github.com/multiformats/go-multiaddr-net"
 
-const (
-	ProtocolId   = 350
-	ProtocolName = "shs"
 )
+
+var proto = ma.ProtocolWithName("shs")
 
 var ErrTCPOnly = errors.New("shs only supports tcp") // TODO get rid of this
 var ErrWrongBindKey = errors.New("public key in bind address doesn't match own key")
@@ -37,7 +36,7 @@ func (t *Transport) Listen(laddr ma.Multiaddr) (*Listener, error) {
 	head, tail := maHead(laddr)
 
 	// get base58 pubkey from ma
-	bindPubKey58, err := head.ValueForProtocol(ProtocolId)
+	bindPubKey58, err := head.ValueForProtocol(proto.Code)
 	if err != nil {
 		return nil, err
 	}
