@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	b58 "github.com/jbenet/go-base58"
-	ma "github.com/jbenet/go-multiaddr"
 	shs "github.com/keks/secretstream/secrethandshake"
+	ma "github.com/multiformats/go-multiaddr"
 )
 
 const (

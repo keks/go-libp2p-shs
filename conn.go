@@ -7,8 +7,8 @@ import (
 
 	b58 "github.com/jbenet/go-base58"
 
-	ma "github.com/jbenet/go-multiaddr"
-	manet "github.com/jbenet/go-multiaddr-net"
+	ma "github.com/multiformats/go-multiaddr"
+	manet "github.com/multiformats/go-multiaddr-net"
 )
 
 // Conn is an encrypted connection to a remote shs host.

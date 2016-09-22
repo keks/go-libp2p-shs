@@ -5,9 +5,9 @@ import (
 
 	b58 "github.com/jbenet/go-base58"
 
-	ma "github.com/jbenet/go-multiaddr"
-	manet "github.com/jbenet/go-multiaddr-net"
 	shs "github.com/keks/secretstream/secrethandshake"
+	ma "github.com/multiformats/go-multiaddr"
+	manet "github.com/multiformats/go-multiaddr-net"
 
 const (
 	ProtocolId   = 350
