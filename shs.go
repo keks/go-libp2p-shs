@@ -2,6 +2,7 @@ package shs
 
 import (
 	"errors"
+	"net"
 
 	b58 "github.com/jbenet/go-base58"
 
@@ -36,7 +37,21 @@ func (t *Transport) Matches(a ma.Multiaddr) bool {
 
 // Dialer retuns a Dialer. laddr is ignored.
 func (t *Transport) Dialer(laddr ma.Multiaddr, opts ...transport.DialOpt) (transport.Dialer, error) {
-	return Dialer{t}, nil
+	nd := net.Dialer{}
+
+	// set localaddr
+	if laddr != nil {
+		_, laTail := maHead(laddr)
+
+		nladdr, err := manet.ToNetAddr(laTail)
+		if err != nil {
+			return nil, err
+		}
+
+		nd.LocalAddr = nladdr
+	}
+
+	return Dialer{nd, t}, nil
 }
 
 // Listen returns a *Listener for the specified laddr.

@@ -1,6 +1,7 @@
 package shs
 
 import (
+	"context"
 	"math/rand" // deterministic for tests
 	"testing"
 
@@ -58,7 +59,7 @@ func TestConnect(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	daddr, err := ma.NewMultiaddr("/ip4/127.0.0.1/shs/" + b58.Encode(t2.keys.Public[:]))
+	daddr, err := ma.NewMultiaddr("/ip4/127.0.0.1/tcp/1235/shs/" + b58.Encode(t2.keys.Public[:]))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -97,8 +98,9 @@ func TestConnect(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	cc, err := d.Dial(laddr)
+	cc, err := d.DialContext(context.WithValue(context.Background(), "t", t), laddr)
 	if err != nil {
+		t.Log("error dialing", laddr)
 		t.Fatal(err)
 	}
 

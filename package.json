@@ -33,15 +33,15 @@
     },
     {
       "author": "whyrusleeping",
-      "hash": "QmW3HcZ8gDr2JyK7fZnXLqjRJ4iu4LFmsYGZJyqQZx7UPp",
+      "hash": "QmTW4aXXJkPgYLSsahkMW2fk4gPfLDv55G1vYRamBZywXY",
       "name": "go-libp2p-transport",
-      "version": "1.6.1"
+      "version": "1.6.2"
     }
   ],
   "gxVersion": "0.7.0",
   "language": "go",
   "license": "",
   "name": "go-libp2p-shs",
-  "version": "0.0.0"
+  "version": "1.0.0"
 }
 

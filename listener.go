@@ -96,7 +96,6 @@ func (a Addr) String() string {
 
 func maHead(m ma.Multiaddr) (head, tail ma.Multiaddr) {
 	ms := ma.Split(m)
-
 	head = ms[len(ms)-1]
 	tail = ma.Join(ms[:len(ms)-1]...)
 
