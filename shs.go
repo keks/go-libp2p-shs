@@ -35,7 +35,7 @@ func (t *Transport) Matches(a ma.Multiaddr) bool {
 	return mafmt.SHS.Matches(a)
 }
 
-// Dialer retuns a Dialer. laddr is ignored.
+// Dialer retuns a Dialer.
 func (t *Transport) Dialer(laddr ma.Multiaddr, opts ...transport.DialOpt) (transport.Dialer, error) {
 	nd := net.Dialer{}
 
