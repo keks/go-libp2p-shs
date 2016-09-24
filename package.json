@@ -36,12 +36,18 @@
       "hash": "QmTW4aXXJkPgYLSsahkMW2fk4gPfLDv55G1vYRamBZywXY",
       "name": "go-libp2p-transport",
       "version": "1.6.2"
+    },
+    {
+      "author": "keks",
+      "hash": "QmNXuucyCjVtcVVsR3nE5vqdKoJeRDC492YfDz234p6RTS",
+      "name": "secretstream",
+      "version": "1.0.0"
     }
   ],
   "gxVersion": "0.7.0",
   "language": "go",
   "license": "",
   "name": "go-libp2p-shs",
-  "version": "1.0.0"
+  "version": "1.0.1"
 }
 
