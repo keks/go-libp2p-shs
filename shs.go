@@ -19,6 +19,8 @@ var proto = ma.ProtocolWithName("shs")
 var ErrTCPOnly = errors.New("shs only supports tcp") // TODO get rid of this
 var ErrWrongBindKey = errors.New("public key in bind address doesn't match own key")
 
+var Pattern = mafmt.And(mafmt.Reliable, mafmt.Base(ma.SHS))
+
 // Transport implements the go-libp2p-transport.Transport interface
 type Transport struct {
 	keys   shs.EdKeyPair
